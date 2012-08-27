@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<!--NOTICE: Please open this file in your web browser. If presented with a security warning, you may safely tell it to allow the blocked content.-->
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD.\nAlthough MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD.\nNo support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.5.xsd">
+	<header>
+		<meta name="generator" content="MODX file generated with PP MODX Creator by tumba25 (online version)"/>
+		<license><![CDATA[http://opensource.org/licenses/gpl-license.php GNU General Public License v2]]></license>
+		<title lang="en"><![CDATA[Upload Toolkit 3]]></title>
+		<description lang="en"><![CDATA[The Upload Toolkit it's an script that allows user to upload files to the root/download, but each user will have an individual folder named with his user ID, like root/download/2 for the administrator.]]></description>
+		<author-group>
+			<author>
+				<realname><![CDATA[Salva]]></realname>
+				<username><![CDATA[Saske1]]></username>
+				<homepage><![CDATA[http://phpbbsaske.eshost.es/foro/index.php]]></homepage>
+				<email><![CDATA[salva_bxt@hotmail.com]]></email>
+			</author>
+			<author>
+				<realname><![CDATA[Gabriel]]></realname>
+				<username><![CDATA[leviatan21]]></username>
+				<homepage><![CDATA[http://www.mssti.com/phpbb3/index.php]]></homepage>
+			</author>
+		</author-group>
+		<mod-version>0.1.4</mod-version>
+		<installation>
+			<level>easy</level>
+			<time>480</time>
+			<target-version>3.0.8</target-version>
+		</installation>
+		<link-group>
+			<link type="contrib" href="contrib/0.1.1 to 0.1.2.xml" lang="en">Version 0.1.1 to 0.1.2</link>
+			<link type="contrib" href="contrib/0.1.2 to 0.1.3.xml" lang="en">Version 0.1.2 to 0.1.3</link>
+			<link type="template" href="contrib/subsilver2.xml" lang="en">Subsilver2</link>
+		</link-group>
+	</header>
+	<action-group>
+		<copy>
+			<file from="root/language/en/email/uploadtoolkit_email.txt" to="/language/en/email/uploadtoolkit_email.txt"/>
+			<file from="root/language/en/mods/uploadtoolkit.php" to="/language/en/mods/uploadtoolkit.php"/>
+			<file from="root/styles/prosilver/template/uploadtoolkit_body.html" to="/styles/prosilver/template/uploadtoolkit_body.html"/>
+			<file from="root/styles/prosilver/theme/uploadtoolkit.css" to="/styles/prosilver/theme/uploadtoolkit.css"/>
+			<file from="root/styles/prosilver/theme/images/icon_ut.gif" to="/styles/prosilver/theme/images/icon_ut.gif"/>
+			<file from="root/uploadkit/*-*" to="/uploadkit/*-*"/>
+		</copy>
+		<open src="/includes/fuctions.php">
+			<edit>
+				<find><![CDATA['U_RESTORE_PERMISSIONS'   => ($user->data['user_perm_from'] && $auth->acl_get('a_switchperm')) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=restore_perm') : '',]]></find>
+				<action type="after-add"><![CDATA['U_UPLOADTOOLKIT'            => append_sid("{$phpbb_root_path}uploadkit/index.$phpEx"),]]></action>
+			</edit>
+		</open>
+		<open src="/includes/acp/acp_attachments.php">
+			<edit>
+				<find><![CDATA[						'allow_attachments'		=> array('lang' => 'ALLOW_ATTACHMENTS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),]]></find>
+				<action type="after-add"><![CDATA[						'allow_uploadtoolkit'		=> array('lang' => 'ALLOW_UPLOADTOOLKIT',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),]]></action>
+			</edit>
+		</open>
+		<open src="/language/en/common.php">
+			<edit>
+				<find><![CDATA[				));
+				?>]]></find>
+				<action type="before-add"><![CDATA[				'UPLOADTOOLKIT'                  => 'UploadToolkit 3',
+				'UT_EXPLAIN'            => 'UploadToolkit 3',]]></action>
+			</edit>
+		</open>
+		<open src="/language/en/acp/attachments.php">
+			<edit>
+				<find><![CDATA[	'ALLOW_SELECTED_FORUMS'				=> 'Only forums selected below',]]></find>
+				<action type="after-add"><![CDATA[	'ALLOW_UPLOADTOOLKIT'				=> 'Enable / Disable Upload Toolkit 3',]]></action>
+			</edit>
+		</open>
+		<open src="/styles/prosilver/template/overall_footer.html">
+			<edit>
+				<find><![CDATA[Powered by <a href="http://www.phpbb.com/">phpBB</a> &copy; 2000, 2002, 2005, 2007 phpBB Group]]></find>
+				<action type="after-add"><![CDATA[Upload Toolkit 3 by <a href="http://www.phpbbsaske-eshost.es/foro/index.php">phpBBSaske</a> &copy; 2011]]></action>
+			</edit>
+		</open>
+		<open src="/styles/prosilver/template/overall_header.html">
+			<edit>
+				<find><![CDATA[<li class="icon-faq"><a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}">{L_FAQ}</a></li>]]></find>
+				<action type="after-add"><![CDATA[<li class="icon-ut"><a href="{U_UPLOADTOOLKIT}" title="{L_UT_EXPLAIN}">{L_UPLOADTOOLKIT}</a></li>]]></action>
+			</edit>
+		</open>
+		<open src="/styles/prosilver/theme/bidi.css">
+			<edit>
+				<find><![CDATA[.rtl .icon-search]]></find>
+				<action type="after-add"><![CDATA[, .rtl .icon-ut]]></action>
+			</edit>
+		</open>
+		<open src="/styles/prosilver/theme/buttons.css">
+			<edit>
+				<find><![CDATA[.icon-search]]></find>
+				<action type="after-add"><![CDATA[, .icon-ut]]></action>
+			</edit>
+		</open>
+		<open src="/styles/prosilver/theme/colours.css">
+			<edit>
+				<find><![CDATA[.icon-search               { background-image: url("{T_THEME_PATH}/images/icon_search.gif"); }]]></find>
+				<action type="after-add"><![CDATA[.icon-ut              { background-image: url("{T_THEME_PATH}/images/icon_ut.gif"); }]]></action>
+			</edit>
+		</open>
+		<open src="/styles/prosilver/theme/stylesheet.css">
+			<edit>
+				<find><![CDATA[@import url("colours.css");]]></find>
+				<action type="after-add"><![CDATA[@import url("uploadtoolkit.css");]]></action>
+			</edit>
+		</open>
+		<diy-instructions lang="en"><![CDATA[1) Refresh Theme and Template
+2) Enable in ACP > Posting > Attachment Settings
+3) Enjoy the MOD !]]></diy-instructions>
+	</action-group>
+</mod>

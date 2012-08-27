@@ -1,0 +1,605 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- MOD :  Upload Toolkir (v0.1.4) - START //-->
+
+<script type="text/javascript">
+// <![CDATA[
+
+var form_name = 'postform';
+var text_name = 'message';
+
+function win_close(text)
+{
+	var textarea	= document.getElementById(text_name);
+//	var quickreply	= document.getElementById('quickreply');
+	var popup		= false;
+	if (!textarea)
+	{
+		form_name	= 'postform';
+		text_name	= 'signature';
+		textarea	= document.getElementById(text_name);
+		popup		= false;
+
+		if (!textarea)
+		{
+			form_name	= 'postform';
+			text_name	= 'message';
+			textarea	= opener.document.getElementById(text_name);
+//			quickreply	= opener.document.getElementById('quickreply');
+			popup		= true;
+
+			if (!textarea)
+			{
+				form_name	= 'postform';
+				text_name	= 'signature';
+				textarea	= opener.document.getElementById(text_name);
+				popup		= true;
+			}
+		}
+	}
+
+	if (textarea && textarea.style.display != 'none' /* && quickreply.style.display != 'none' */)
+	{
+		if (text)
+		{
+			try {
+				initInsertions();
+				insert_text(text, false, popup);
+				window.close();
+				return true;
+			} catch(e) {
+				return false;
+			}
+		}
+		else
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+// ]]>
+</script>
+
+<script type="text/javascript" src="{T_TEMPLATE_PATH}/editor.js"></script>
+<link href="{T_THEME_PATH}/uploadtoolkit.css" rel="stylesheet" type="text/css" />
+<!-- IF S_UPLOADTOOLKIT_ENABLE -->
+<div class="panel bg2">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+
+		<table id="ut_header" width="100%" cellpadding="0" cellspacing="0">
+			<tr>
+				<td align="left">
+					<span class="strong">{L_TOOLKIT_WELCOME} : </span>( {USER_ID} ) {USER_NAME}
+				</td>
+				<td align="right">
+					{L_TOOLKIT_SASKE_LINK}
+				</td>
+			</tr>
+		</table>
+
+		<div class="content">
+			<table width="100%" cellpadding="0" cellspacing="5" class="bg_light_grey border_all">
+				<tr>
+					<td>
+
+<!-- IF S_FRONTPAGE -->
+<!-- IF not UT_ADMIN -->
+	<!-- IF S_DISPLAY_AGREEMENT -->
+	<table border="0" width="100%" cellpadding="0" cellspacing="0" class="bg_white">
+		<tr>
+			<td class="border_tb">
+				<h3>{L_TOOLKIT_AGREEMENT} : </h3>
+			<!-- IF S_AGREEMENT -->
+				{L_TOOLKIT_AGREE_FULL}
+			<!-- ELSE -->
+				{L_TOOLKIT_AGREE_SEE}<br />
+			<!-- ENDIF -->
+
+			<!-- IF .rulesrow -->
+				<ul class="agreement">
+				<!-- BEGIN rulesrow -->
+					<li>{rulesrow.AGREE_RULE_TEXT}</li>
+				<!-- END rulesrow -->
+				</ul>
+				<!-- IF .alsorulesrow -->
+					{L_TOOLKIT_AGREE_ALSO}
+					<ul class="agreement">
+					<!-- BEGIN alsorulesrow -->
+						<li>{alsorulesrow.AGREE_ALSO_TEXT}</li>
+					<!-- END also -->
+					</ul>
+				<!-- ENDIF -->
+			<!-- ENDIF -->
+
+			</td>
+		</tr>
+	</table>
+	<br />
+	<!-- ENDIF -->
+<!-- ENDIF -->
+
+	<table border="0" width="100%" cellpadding="0" cellspacing="0" class="bg_white">
+	<!-- IF S_CAN_UPLOAD -->
+		<tr>
+			<td class="border_tb">
+				<h3>{L_TOOLKIT_MEW_UPLOAD} : </h3>
+				<form enctype="multipart/form-data" action="{U_ACTION}" method="post">
+					<table border="0" width="100%" cellpadding="0" cellspacing="0">
+						<tr>
+							<td style="width: 30%; text-align: left;">
+								<span class="strong">{L_TOOLKIT_FILE_NAME} : </span>
+							</td>
+							<td style="text-align: left;">
+								<input type="file" id="fupload" name="fupload" size="40" maxlength="{FILESIZE}" value="" class="inputbox autowidth" /> 
+								<input type="hidden" id="action" name="action" value="upload"/>
+								<input type="hidden" id="user_folder_1" name="user_folder" value="{USER_FOLDER}"/>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: left;">
+								<span class="strong">{L_TOOLKIT_MAX_FILESIZE} : </span>{MAX_FILESIZE}
+							</td>
+							<td style="text-align: left;">
+								<input type="submit" value="{L_TOOLKIT_BUTTON_UPLOAD}" class="button2" />
+							</td>
+						</tr>
+					</table>
+				</form>
+				<hr />
+				<span class="strong">{L_TOOLKIT_NOTE} :</span>
+				{L_TOOLKIT_NOTES}
+			</td>
+		</tr>
+	<!-- ELSE -->
+		<tr>
+			<td class="border_tb">
+				<h3>{L_TOOLKIT_MEW_UPLOAD} : </h3>
+				<span class="strong">{L_TOOLKIT_STATUS} : </span><br />
+				<div class="boxerror">
+					{L_TOOLKIT_NO_ROOM}
+				</div>
+			</td>
+		</tr>
+	<!-- ENDIF -->
+	</table>
+	<br />
+
+	<table border="0" width="100%" cellpadding="0" cellspacing="0" class="bg_white">
+		<tr>
+			<td class="border_tb">
+				<!-- IF .ufiles -->
+				<form id="show_thumb" method="post" action="{U_ACTION}">
+					<div style="float: right; margin-top: 5px;">
+				<!-- IF S_THUMBNAILS -->
+						<input type="submit" name="showthumb" value="{L_TOOLKIT_THUMB_HIDE}" class="button2 mini" />
+				<!-- ELSE -->
+						<input type="submit" name="showthumb" value="{L_TOOLKIT_THUMB_SHOW}" class="button2 mini" onclick="document.getElementById('show_thumb').action += '?thumbnails=1';" />
+				<!-- ENDIF -->
+						<input type="hidden" id="user_folder_3" name="user_folder" value="{USER_FOLDER}"/>
+					</div>
+				</form>
+				<!-- ENDIF -->
+
+				<h3>{L_TOOLKIT_MY_FILES} : </h3>
+				<table border="0" width="100%" cellpadding="0" cellspacing="0">
+					<tr>
+						<td style="width: 30%; text-align: left;">
+							<span class="strong">{L_TOOLKIT_DISK_QUOTA} : </span>{QUOTA_INFO_USER}
+						</td>
+						<td style="text-align: left;">
+							<table border="0" width="50%" class="bg_white border_all" style="padding: 0; margin: 0;" cellpadding="0" cellspacing="0">
+								<tr>
+									<td>
+										<table border="0" cellpadding="0" cellspacing="0" style="background-color: #{QUOTA_BG}; width: {QUOTA_PERCENT}%;">
+											<tr>
+												<td align="center">
+													<span class="strong">{QUOTA_PERCENT_FLOAT}%</span>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+				<hr />
+			<!-- IF MESSAGE -->
+				{MESSAGE}{QUOTA_INFO_PATH}
+			<!-- ELSE -->
+			<div id="resume">
+				<!-- RESUME - Start //-->
+				<table id="folder_list" border="0" width="100%" cellspacing="1" cellpadding="0" class="bg_white">
+					<thead>
+						<tr>
+							<th>{L_TOOLKIT_QUOTA_INFO_DETAIL}</th>
+							<th>{L_TOOLKIT_QUOTA_INFO_FILES}</th>
+							<th>{L_TOOLKIT_QUOTA_INFO_FOLDERS}</th>
+							<th>{L_TOOLKIT_QUOTA_INFO_SIZE}</th>
+						</tr>
+					</thead>
+					<tbody style="vertical-align: top;">
+						<tr class="row3">
+							<td>
+								{QUOTA_INFO_PATH}
+							</td>
+							<td valign="bottom" style="width: 200px; text-align: center;">
+								{QUOTA_INFO_FILES}
+							</td>
+							<td valign="bottom" style="width: 200px; text-align: center;">
+								{QUOTA_INFO_FOLDERS}
+							</td>
+							<td valign="bottom" style="width: 200px; text-align: center;">
+								{QUOTA_INFO_ACUMULATE}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<!-- RESUME - End //-->
+
+				<!-- IF .ufolders -->
+				<form id="navigate" method="post" action="{U_ACTION}">
+				<table id="folder_list" border="0" width="100%" cellspacing="1" cellpadding="0" class="bg_white">
+					<thead>
+						<tr>
+							<th>{L_TOOLKIT_FOLDER_NAME}</th>
+							<th>{L_TOOLKIT_ACTIONS}</th>
+						</tr>
+					</thead>
+					<tbody style="vertical-align:top;">
+						<!-- IF U_ACTION_CREATE -->
+						<tr class="row3">
+							<td>
+								<input type="radio" name="create[]" value="folder"   class="radio" checked="checked" />&nbsp;{L_TOOLKIT_CREATE_FOLDER}&nbsp;
+								<!-- IF not S_HAVE_QUOTA -->
+								<input type="radio" name="create[]" value="quota"    class="radio" />&nbsp;{L_TOOLKIT_CREATE_QUOTA}&nbsp;
+								<!-- ENDIF -->
+								<!-- IF not S_HAVE_MAXSIZE -->
+								<input type="radio" name="create[]" value="maxsize"  class="radio" />&nbsp;{L_TOOLKIT_CREATE_MAXFILE}&nbsp;
+								<!-- ENDIF -->
+								<!-- IF not S_HAVE_DISABLED -->
+								<!-- ENDIF -->
+								<input type="radio" name="create[]" value="disabled" class="radio" />&nbsp;{L_TOOLKIT_CREATE_DISABLE}&nbsp;
+							</td>
+							<td valign="bottom" style="width: 200px; text-align: center;" >
+								<input type="submit" name="submit" value="{L_TOOLKIT_BUTTON_CREATE}" class="button2 mini" onclick="document.getElementById('navigate').action += '{U_ACTION_CREATE}';"/>
+							</td>
+						</tr>
+						<!-- ENDIF -->
+
+						<!-- BEGIN ufolders -->
+						<tr class="row3">
+							<td>
+								<input type="submit" name="change_dir[]" value="{ufolders.FOLDER_HREF}" class="button2" />
+							</td>
+							<td valign="bottom" style="width: 200px; text-align: center;" >
+								<!-- IF ufolders.U_ACTION_RENAME -->
+								<input type="submit" name="rename[{ufolders.FOLDER_NAME}]" value="{L_TOOLKIT_ACTIONS_RENAME}" class="button2 mini" onclick="document.getElementById('navigate').action += '{ufolders.U_ACTION_RENAME}';"/>
+								<!-- ENDIF -->
+								<!-- IF ufolders.U_ACTION_DELETE -->
+								<input type="submit" name="delete[{ufolders.FOLDER_NAME}]" value="{L_TOOLKIT_ACTIONS_DELETE}" class="button2 mini" onclick="document.getElementById('navigate').action += '{ufolders.U_ACTION_DELETE}';"/>
+								<!-- ENDIF -->
+							</td>
+						</tr>
+						<!-- END ufolders -->
+						<tr class="row3" style="display: none;">
+							<td colspan="2">
+								<input type="hidden" id="user_folder_2" name="user_folder" value="{USER_FOLDER}"/>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</form>
+				<!-- ENDIF -->
+
+				<!-- IF .ufiles -->
+				<form id="userfiles" method="post" action="{U_ACTION}">
+				<table id="file_list" border="0" width="100%" cellspacing="1" cellpadding="0" class="bg_white">
+					<thead>
+						<tr>
+							<th>{L_TOOLKIT_NUMBER}</th>
+							<!-- IF S_THUMBNAILS --><th>{L_TOOLKIT_THUMB}</th><!-- ENDIF -->
+							<th>{L_TOOLKIT_FILE_NAME}</th>
+							<th>{L_TOOLKIT_SIZE}</th>
+							<th>{L_TOOLKIT_TIME}</th>
+							<!-- IF S_ACTIONS --><th>{L_TOOLKIT_ACTIONS}</th><!-- ENDIF -->
+						</tr>
+					</thead>
+					<tbody style="vertical-align:top;">
+					<!-- BEGIN ufiles -->
+					<!-- IF ufiles.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+							<td valign="bottom" style="width: 30px; text-align: center;">
+								{ufiles.FILE_ID}
+							</td>
+						<!-- IF S_THUMBNAILS -->
+							<td valign="bottom" style="width: {S_THUMBNAIL_SIZE}px; text-align: center;">
+							<!-- IF ufiles.FILE_THUMB -->{ufiles.FILE_THUMB}<!-- ENDIF -->
+							</td>
+						<!-- ENDIF -->
+							<td valign="bottom">
+								<a name="{ufiles.FILE_ID}" href="{ufiles.FILE_HREF}" class="{ufiles.FILE_CLASS}" onclick="window.open(this.href);return false;">{ufiles.FILE_NAME}</a>
+							</td>
+							<td valign="bottom" style="width: 100px; text-align: center;">
+								{ufiles.FILE_SIZE}
+							</td>
+							<td valign="bottom" style="width: 200px; text-align: center;">
+								{ufiles.FILE_TIME}
+							</td>
+							<!-- IF S_ACTIONS -->
+							<td valign="bottom" style="width: 200px; text-align: center;">
+								<!-- IF ufiles.U_ACTION_EDIT -->
+								<input type="submit" name="edit[{ufiles.FILE_NAME}]" value="{L_TOOLKIT_ACTIONS_EDIT}" class="button2 mini" onclick="document.getElementById('userfiles').action += '{ufiles.U_ACTION_EDIT}';"/>
+								<!-- ENDIF -->
+								<!-- IF ufiles.U_ACTION_RENAME -->
+								<input type="submit" name="rename[{ufiles.FILE_NAME}]" value="{L_TOOLKIT_ACTIONS_RENAME}" class="button2 mini" onclick="document.getElementById('userfiles').action += '{ufiles.U_ACTION_RENAME}';"/>
+								<!-- ENDIF -->
+								<!-- IF ufiles.U_ACTION_DELETE -->
+								<input type="submit" name="delete[{ufiles.FILE_NAME}]" value="{L_TOOLKIT_ACTIONS_DELETE}" class="button2 mini" onclick="document.getElementById('userfiles').action += '{ufiles.U_ACTION_DELETE}';"/>
+								<!-- ENDIF -->
+							</td>
+							<!-- ENDIF -->
+						</tr>
+					<!-- END ufiles -->					
+						<tr class="row3" style="display: none;">
+							<td colspan="2">
+								<input type="hidden" id="user_folder" name="user_folder" value="{USER_FOLDER}"/>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</form>
+				<!-- ENDIF -->
+			</div>
+			<!-- ENDIF -->
+			</td>
+		</tr>
+	</table>
+<!-- ENDIF -->
+
+<!-- IF S_EDIT -->
+	<table border="0" width="100%" cellpadding="0" cellspacing="0" class="bg_white">
+		<tr>
+			<td class="border_tb">
+				<h3>{L_TOOLKIT_EDIT} : </h3>
+
+			<!-- IF ERROR_MSG -->
+				<span class="strong">{L_TOOLKIT_STATUS} : </span><br />
+				<div class="<!-- IF S_EDITED -->boxsuccess<!-- ELSE -->boxerror<!-- ENDIF -->">
+					<!-- IF not S_EDITED -->
+					<span class="strong">{L_TOOLKIT_NO_EDITED}</span><br />
+					<!-- ENDIF -->
+					{ERROR_MSG}
+					<!-- IF not S_EDITED -->
+					<br />{L_TOOLKIT_TRY_AGAIN}
+					<!-- ENDIF -->
+				</div>
+			<!-- ENDIF -->
+						
+			<!-- IF not S_EDITED and not ERROR_MSG -->
+				<br />
+				<span class="strong">{L_TOOLKIT_EDIT_FILE} : </span> {U_FULL_ORIGINAL}
+				<br />
+				<form method="post" action="{U_ACTION}">
+					<fieldset class="norder_none">
+						<textarea id="edit_data" name="edit_data" style="font-family:'Courier New', monospace;font-size:9pt;line-height:125%;width:100%;" cols="80" rows="{TEXT_ROWS}">{FILE_DATA}</textarea>
+						<br />
+						<input type="submit" id="save" name="save" value="{L_TOOLKIT_BUTTON_SAVE}" class="button1 mini" />&nbsp;<input class="button2 mini" type="submit" name="cancel" value="{L_CANCEL}" />
+						<br />
+						<input type="hidden" name="edit[{FILE_LINK}]" value="{FILE_LINK}"/>
+						<input type="hidden" name="action" value="edit" />
+						<input type="hidden" id="user_folder" name="user_folder" value="{USER_FOLDER}"/>
+					</fieldset>
+				</form>
+				<hr />
+				<span class="strong">{L_TOOLKIT_NOTE} :</span>
+				{L_TOOLKIT_EDIT_NOTE}
+			<!-- ENDIF -->
+			</td>
+		</tr>
+	</table>
+<!-- ELSEIF S_CREATE -->
+	<table border="0" width="100%" cellpadding="0" cellspacing="0" class="bg_white">
+		<tr>
+			<td class="border_tb">
+				<h3>{L_TOOLKIT_CREATE} : </h3>
+
+			<!-- IF ERROR_MSG -->
+				<span class="strong">{L_TOOLKIT_STATUS} : </span><br />
+				<div class="<!-- IF S_CREATED -->boxsuccess<!-- ELSE -->boxerror<!-- ENDIF -->">
+					<!-- IF not S_CREATED -->
+					<span class="strong">{L_TOOLKIT_NO_CREATED}</span><br />
+					<!-- ENDIF -->
+					{ERROR_MSG}
+					<!-- IF not S_CREATED -->
+					<br />{L_TOOLKIT_TRY_AGAIN}
+					<!-- ENDIF -->
+				</div>
+			<!-- ENDIF -->
+
+			<!-- IF not S_CREATED and not ERROR_MSG -->
+				<span class="strong">{L_TOOLKIT_CREATE_NEWNAME} :</span>
+				<br />
+				<form method="post" action="{U_ACTION}">
+					<fieldset class="norder_none">
+						<input type="text" name="folder_name" size="100" value="{U_CREATE}" class="inputbox autowidth" />
+						<br />
+						<input type="submit" id="submit" name="create" value="{L_TOOLKIT_BUTTON_CREATE}" class="button1 mini" />&nbsp;<input class="button2 mini" type="submit" name="cancel" value="{L_CANCEL}" />
+						<br />
+						<input type="hidden" id="user_folder" name="user_folder" value="{USER_FOLDER}"/>
+					</fieldset>
+				</form>
+				<hr />
+				<span class="strong">{L_TOOLKIT_NOTE} :</span>
+				{L_TOOLKIT_NOTES}
+			<!-- ENDIF -->
+			</td>
+		</tr>
+	</table>
+<!-- ELSEIF S_UPLOAD -->
+	<table border="0" width="100%" cellpadding="0" cellspacing="0" class="bg_white">
+		<tr>
+			<td class="border_tb">
+				<h3>{L_TOOLKIT_UPLOAD}</h3>
+
+			<!-- IF ERROR_MSG -->
+				<span class="strong">{L_TOOLKIT_STATUS} : </span><br />
+				<div class="<!-- IF S_UPLOADED -->boxsuccess<!-- ELSE -->boxerror<!-- ENDIF -->">
+					<!-- IF not S_UPLOADED -->
+					<span class="strong">{L_TOOLKIT_NO_UPLOADED}</span><br />
+					<!-- ENDIF -->
+					{ERROR_MSG}
+				</div>
+			<!-- ENDIF -->
+
+			<!-- IF S_UPLOADED -->
+				<br />
+				<span class="strong">{L_TOOLKIT_UPLOADED_LINK} : </span>
+				<br />
+				<input type="text" id="posttext" name="posttext" value="{FILE_TAG}" size="100" class="inputbox autowidth"  style="width: 90%;"/>
+				<br /><br />
+				<input type="submit" id="confirm" name="confirm" value="{L_TOOLKIT_POSTIT}" class="button1 mini" onclick="win_close('{FILE_TAG}'); return false;"/>
+		<!-- ENDIF -->
+				<br />
+			</td>
+		</tr>
+	</table>
+	<script type="text/javascript">
+	// <![CDATA[
+		if (!win_close()) { document.getElementById('confirm').style.display = 'none'; }
+	// ]]>
+	</script>
+<!-- ELSEIF S_RENAME -->
+	<table border="0" width="100%" cellpadding="0" cellspacing="0" class="bg_white">
+		<tr>
+			<td class="border_tb">
+				<h3>{L_TOOLKIT_RENAME} : </h3>
+
+			<!-- IF ERROR_MSG -->
+				<span class="strong">{L_TOOLKIT_STATUS} : </span><br />
+				<div class="<!-- IF S_RENAMED -->boxsuccess<!-- ELSE -->boxerror<!-- ENDIF -->">
+					<!-- IF not S_RENAMEED -->
+					<span class="strong">{L_TOOLKIT_NO_RENAMED}</span><br />
+					<!-- ENDIF -->
+					{ERROR_MSG}
+					<!-- IF not S_RENAMED -->
+					<br />{L_TOOLKIT_TRY_AGAIN}
+					<!-- ENDIF -->
+				</div>
+			<!-- ENDIF -->
+						
+			<!-- IF not S_RENAMEED and not ERROR_MSG -->
+				<h3>{L_TOOLKIT_DETAILS} :</h3>
+				<span class="strong">{L_TOOLKIT_FILE} :</span>
+				<br />{U_FULL_ORIGINAL}
+				<br /><br />
+				<span class="strong">{L_TOOLKIT_RENAME_NEWNAME} :</span>
+				<br />
+				<form method="post" action="{U_ACTION}">
+					<fieldset class="norder_none">
+						<input type="text" name="rename_filename" size="100" value="{U_RENAME}" class="inputbox autowidth" />
+						<br />
+						<input type="submit" id="submit" name="submit" value="{L_TOOLKIT_BUTTON_RENAME}" class="button1 mini" />&nbsp;<input class="button2 mini" type="submit" name="cancel" value="{L_CANCEL}" />
+						<br />
+						<input type="hidden" name="rename[{U_ORIGINAL}]" value="{U_ORIGINAL}"/>
+						<input type="hidden" id="user_folder" name="user_folder" value="{USER_FOLDER}"/>
+					</fieldset>
+				</form>
+				<hr />
+				<span class="strong">{L_TOOLKIT_NOTE} :</span>
+				{L_TOOLKIT_NOTES}
+			<!-- ENDIF -->
+			</td>
+		</tr>
+	</table>
+<!-- ELSEIF S_DELETE -->
+	<table border="0" width="100%" cellpadding="0" cellspacing="0" class="bg_white">
+		<tr>
+			<td class="border_tb">
+				<h3>{L_TOOLKIT_DELETE} : </h3>
+
+			<!-- IF ERROR_MSG -->
+				<span class="strong">{L_TOOLKIT_STATUS} : </span><br />
+				<div class="<!-- IF S_DELETED -->boxsuccess<!-- ELSE -->boxerror<!-- ENDIF -->">
+					<!-- IF not S_DELETED -->
+					<span class="strong">{L_TOOLKIT_NO_DELETED}</span><br />
+					<!-- ENDIF -->
+					{ERROR_MSG}
+					<!-- IF not S_DELETED -->
+					<br />{L_TOOLKIT_TRY_AGAIN}
+					<!-- ENDIF -->
+				</div>
+			<!-- ENDIF -->
+
+			</td>
+		</tr>
+	</table>
+<!-- ENDIF -->
+
+<!-- IF S_CONFIRM_ACTION -->
+<form id="confirm" action="{S_CONFIRM_ACTION}" method="post">
+	<table border="0" width="100%" cellpadding="0" cellspacing="0" class="bg_white">
+		<tr>
+			<td class="border_tb">
+				<h2>{MESSAGE_TEXT}</h2>
+				<p>{L_TOOLKIT_CONFIRM_EXPLAIN}</p>
+				<br />
+				<input type="submit" name="confirm" value="{L_YES}" class="button1 mini" />&nbsp;
+				<input type="submit" name="cancel" value="{L_NO}" class="button2 mini" />
+				{S_HIDDEN_FIELDS}
+				<br /><br />
+			</td>
+		</tr>
+	</table>
+</form>
+<!-- ENDIF -->
+
+<!-- IF S_ERROR_HANDLER -->
+<form id="confirm" action="{S_CONFIRM_ACTION}" method="post">
+	<table border="0" width="100%" cellpadding="0" cellspacing="0" class="bg_white">
+		<tr>
+			<td class="border_tb">
+				<h2>{MESSAGE_TITLE} : </h2>
+				<p>{MESSAGE_TEXT}</p>
+			</td>
+		</tr>
+		<tr class="row3" style="display: none;">
+			<td colspan="2">
+				<input type="hidden" id="user_folder" name="user_folder" value="{USER_FOLDER}"/>
+			</td>
+		</tr>
+	</table>
+</form>
+<!-- ENDIF -->
+
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<table id="ut_footer" width="100%" cellpadding="0" cellspacing="0">
+			<tr>
+				<td align="left">
+					<!-- IF not S_FRONTPAGE --><a href="{U_TOOLKIT_INDEX}">{L_TOOLKIT_INDEX}</a><!-- ENDIF -->&nbsp;
+				</td>
+				<td align="right">
+				<!-- IF S_FOUNDER -->
+					<!-- IF UT_ADMIN -->
+						<a href="{U_ADM_LOGOUT}">{L_ADM_LOGOUT}</a>
+					<!-- ELSE -->
+						<a href="{U_ADM_LOGIN}">{L_ACP}</a>
+					<!-- ENDIF -->
+				<!-- ELSE -->&nbsp;<!-- ENDIF -->
+				</td>
+			</tr>
+		</table>
+
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+<!-- ENDIF -->
+<!-- MOD :  Upload Toolkir (v0.1.4) - END //-->
+
+<!-- INCLUDE overall_footer.html -->

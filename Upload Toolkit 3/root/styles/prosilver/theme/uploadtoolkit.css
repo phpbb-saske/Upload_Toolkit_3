@@ -1,0 +1,88 @@
+// UploadToolkit Version 0.1.0
+* {
+	/* Reset browsers default margin, padding and font sizes */
+	margin: 0;
+	padding: 0;
+	font-size: 100%;
+}
+.content {
+	font-size: x-small;
+	voice-family: "\"}\"";
+	voice-family: inherit;
+	font-size: small
+}
+html {
+	color: #536482;
+	/* Always show a scrollbar for short pages - stops the jump when the scrollbar appears. non-ie browsers */
+	height: 100%;
+	margin-bottom: 1px;
+}
+body {
+	/* Text-Sizing with ems: http://www.clagnut.com/blog/348/ */
+	font-family: Tahoma, Helvetica, sans-serif;
+	color: #536482;
+	font-size: 62.5%;	/* This sets the default font size to be equivalent to 10px */
+}
+img {
+	border: 0;
+}
+#page-body   { align: center; display: table; margin-left: auto; margin-right: auto;  width: 90%; }
+.panel       { width: 100%; font-size: 1.2em; }
+.content	 { padding: 0.5em 0 1em 0; }
+
+
+
+#ut_header, #ut_footer { padding: 0.5em 0; }
+.bg_white    { background-color: #ffffff; }
+.bg_black    { background-color: #000000; }
+.bg_light_grey { background-color: #f5f5f5; }
+
+.norder_none { border: 0; }
+.border_all  { border: black 1px solid; padding: 0 0.5em; }
+.border_tb   { border-top: black 1px solid; border-bottom: black 1px solid; padding: 0 0.5em; }
+
+.agreement   { margin: 0 0 0 1.5em; }
+
+.strong      { font-weight : bold; }
+a.warning, .warning { color: #BC2A4D; }
+
+.boxsuccess, .boxerror {
+	padding: 8px;
+	margin: 10px 0;
+	color: #FFFFFF;
+	text-align: center;
+}
+.boxsuccess { background-color: #228822; }
+.boxerror   { background-color: #BC2A4D; }
+* html .boxerror, * html .boxsuccess { height: 1%; } /* Pixel shift fix for IE */
+
+
+#resume th {
+	padding: 1px 4px;
+	color: #FFFFFF;
+	background: #70AED3;
+	border-top: 1px solid #6DACD2;
+	border-bottom: 1px solid #327AA5;
+	text-align: left;
+	font-size: 0.75em;
+	text-transform: uppercase;
+}
+#resume td {
+	text-align: left;
+	font-size: 0.85em;
+	padding: 4px;
+	line-height: 1.20em;
+}
+#resume .button2, #show_thumb .button2 {
+	font-weight: normal;
+	font-size: 0.85em;
+	padding: 0 2px;
+}
+input.mini { font-size: 0.8em; }
+#resume .row1 { background-color: #F9F9F9; }
+#resume .row2 { background-color: #DCEBFE; }
+#resume .row3 { background-color: #DBDFE2; }
+
+.rtl #resume th, .rtl #resume td {
+	text-align: right;
+}

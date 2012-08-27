@@ -1,0 +1,248 @@
+﻿﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<!--NOTICE: Please open this file in your web browser. If presented with a security warning, you may safely tell it to allow the blocked content.-->
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD.\nAlthough MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD.\nNo support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.5.xsd">
+	<header>
+		<meta name="generator" content="MODX file generated with PP MODX Creator 1.0.1 by tumba25 (phpBB version)"/>
+		<license><![CDATA[http://opensource.org/licenses/gpl-license.php GNU General Public License v2]]></license>
+		<title lang="en"><![CDATA[Upload Toolkit 3 *Subsilver2]]></title>
+		<description lang="en"><![CDATA[The Upload Toolkit it's an script that allows user to upload files to the root/download, but each user will have an individual folder named with his user ID, like root/download/2 for the administrator.]]></description>
+		<author-notes lang="en"><![CDATA[For the new verson of this mod, was only available prosilver style, so it is not advisable to wear styles that subsilver2 update the MOD to version 0.1.1
+		Versión Subsilver2 is in 0.1.3]]></author-notes>
+		<author-group>
+			<author>
+				<realname><![CDATA[Gabriel]]></realname>
+				<username phpbbcom="no"><![CDATA[Leviatan21]]></username>
+				<homepage><![CDATA[http://www.mssti.com/phpbb3]]></homepage>
+			</author>
+			<author>
+				<realname><![CDATA[Salva]]></realname>
+				<username phpbbcom="no"><![CDATA[Saske1]]></username>
+				<homepage><![CDATA[http://espartapsp.zobyhost.com/index.php]]></homepage>
+				<email><![CDATA[salva_bxt@hotmail.com]]></email>
+			</author>
+		</author-group>
+		<mod-version>0.1.3</mod-version>
+		<installation>
+			<level>easy</level>
+			<time>60</time>
+			<target-version>3.0.8</target-version>
+		</installation>
+		<history>
+			<entry>
+				<date>2009/9/21</date>
+				<rev-version>0.0.1</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Initial release]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2011/3/15</date>
+				<rev-version>0.1.0</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[MOD Updated to version 3.0.8]]></change>
+					<change><![CDATA[Code change css / html]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2011/3/16</date>
+				<rev-version>0.1.1</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Fixed Errors]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2011/3/20</date>
+				<rev-version>0.1.2</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[improved code of MOD]]></change>
+				</changelog>
+			</entry>
+		</history>
+	</header>
+	<action-group>
+		<copy>
+			<file from="root/styles/subsilver2/template/uploadtoolkit_body.html" to="/styles/subsilver2/template/uploadtoolkit_body.html"/>
+			<file from="root/styles/subsilver2/theme/images/icon_ut.gif" to="/styles/subsilver2/theme/images/icon_ut.gif"/>
+		</copy>
+		<open src="root/styles/prosilver/template/overall_header.html">
+			<edit>
+				<find><![CDATA[            <a href="{U_FAQ}"><img src="{T_THEME_PATH}/images/icon_mini_faq.gif" width="12" height="13" alt="*" /> {L_FAQ}</a>]]></find>
+			</edit>
+			<edit>
+				<action type="after-add"><![CDATA[            <a href="{U_UT}"><img src="{T_THEME_PATH}/images/icon_ut.gif" width="12" height="13" alt="*" /> {L_UT_EXPLAIN}</a>]]></action>
+			</edit>
+		</open>
+		<open src="root/styles/prosilver/theme/stylesheet.css">
+			<edit>
+				<find><![CDATA[    .username-coloured {
+       font-weight: bold;
+    }]]></find>
+			</edit>
+			<edit>
+				<action type="after-add"><![CDATA[    /* Uploadtoolkit
+    ------------ */
+    * {
+
+       /* Reset browsers default margin, padding and font sizes */
+
+       margin: 0;
+
+       padding: 0;
+
+       font-size: 100%;
+
+    }
+    .content {
+
+       font-size: x-small;
+
+       voice-family: "\"}\"";
+
+       voice-family: inherit;
+
+       font-size: small
+
+    }
+
+    html {
+
+       color: #536482;
+
+       /* Always show a scrollbar for short pages - stops the jump when the scrollbar appears. non-ie browsers */
+
+       height: 100%;
+
+       margin-bottom: 1px;
+
+    }
+
+    body {
+
+       /* Text-Sizing with ems: http://www.clagnut.com/blog/348/ */
+
+       font-family: Tahoma, Helvetica, sans-serif;
+       
+       color: #536482;
+
+       font-size: 62.5%;
+       /* This sets the default font size to be equivalent to 10px */
+
+    }
+
+    img {
+
+       border: 0;
+
+    }
+
+    #wrapcentre  { align: center; display: table; margin-left: auto; margin-right: auto;  width: 90%; }
+
+    .panel       { width: 100%; font-size: 1.2em; }
+
+    .content    { padding: 0 0.5em;}
+
+    h3           { font-weight: bold; font-size: 1.05em; text-transform: uppercase; border-bottom: 1px solid #CCCCCC; padding: 0 0 5px 0 ; }
+
+    th           { padding: 2px 5px; }
+
+    a:link, a:visited { color: blue; text-decoration: none; }
+
+    #ut_header, #ut_footer { padding: 0.5em 0; }
+
+    .bg_white    { background-color: #ffffff; }
+
+    .bg_black    { background-color: #000000; }
+
+    .bg_light_grey { background-color: #f5f5f5; }
+
+
+    .norder_none { border: 0; }
+
+    .border_all  { border: black 1px solid; padding: 0 0.5em; }
+
+    .border_tb   { border-top: black 1px solid; border-bottom: black 1px solid; padding: 1em 0.5em; }
+
+
+    .agreement   { margin: 0 0 0 1.5em; }
+
+
+    .strong      { font-weight : bold; }
+
+    a.warning, .warning { color: #BC2A4D; }
+
+
+    .boxsuccess, .boxerror {
+
+       padding: 8px;
+       margin: 10px 0;
+       color: #FFFFFF;
+       text-align: center;
+
+    }
+
+    .boxsuccess { background-color: #228822; }
+
+    .boxerror   { background-color: #BC2A4D; }
+
+    * html .boxerror, * html .boxsuccess { height: 1%; } /* Pixel shift fix for IE */
+
+
+    #resume    { padding: 5px 0px 0px 0px; }
+
+    #resume th {
+
+       padding: 4px 4px;
+       color: #FFFFFF;
+       background: #70AED3;
+       border-top: 1px solid #6DACD2;
+       border-bottom: 1px solid #327AA5;
+       text-align: left;
+       font-size: 0.75em;
+       text-transform: uppercase;
+
+    }
+
+    #resume td {
+
+       text-align: left;
+       font-size: 0.85em;
+       padding: 4px;
+       line-height: 1.20em;
+
+    }
+
+    #resume .btnlite #show_thumb .btnlite {
+
+       font-weight: normal;
+       font-size: 0.85em;
+       padding: 0 2px;
+
+    }
+
+    input.mini { font-size: 0.8em; }
+
+    #resume .row1 { background-color: #F9F9F9; }
+
+    #resume .row2 { background-color: #DCEBFE; }
+
+    #resume .row3 { background-color: #DBDFE2; }
+
+
+    .rtl #resume th, .rtl #resume td {
+       
+    text-align: right;
+
+    }]]></action>
+			</edit>
+		</open>
+		<diy-instructions lang="en"><![CDATA[1) Update your Style Theme and template
+Enjoy MOD
+
+Note: Forum Support Officer http://espartapsp.zobyhost.com/soporte-upload-toolkit-3-f99/
+Nota (2): Please, 777 to permit the next folders to avoid problems with the server
+/download
+/uploadkit/index.php]]></diy-instructions>
+	</action-group>
+</mod>
